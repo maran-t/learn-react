@@ -29,3 +29,17 @@
 .small {
   font-size: 0.75rem;
 }
+
+button {
+  margin-top: 25px;
+  background-color: #61dafb;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.color-picker {
+  @apply cursor-pointer rounded-full w-6 h-6 border border-black;
+}
