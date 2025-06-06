@@ -1,53 +1,48 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
-import Card from './components/Card';
-
-const cardData = [
-  {
-    title: 'Image 01',
-    image: 'https://images.unsplash.com/photo-1696834137815-1b26965e9f57?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, officiis?'
-  },
-  {
-    title: 'Image 02',
-    image: 'https://images.unsplash.com/photo-1696834137457-02b3d1ca323b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste, saepe.'
-  },
-  {
-    title: 'Image 03',
-  }
-];
-
 
 function App() {
-  let [count, setCount] = useState(10);
-  let [color, setColor] = useState('white');
+  const [length, setLength] = useState(8);
+  const [isNumberAllowed, setIsNumberAllowed] = useState(false);
+  const [password, setPassword] = useState('');
+  const passwordRef = useRef(null);
+
+  const generatePassword = () => {
+    let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (isNumberAllowed) characters += "0123456789";
+    let _password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      _password += characters[randomIndex];
+    }
+    setPassword(_password);
+  };
+
+  useEffect(() => {
+    generatePassword();
+  }, [length, isNumberAllowed]);
+
+  function copyText() {
+    navigator.clipboard.writeText(password);
+    passwordRef.current?.select();
+  }
 
   return (
-    <div className='pl-4 pt-16 w-full h-screen duration-200' style={{ backgroundColor: color }}>
-      <h1 className='text-4xl font-bold pt-4 pb-4'>First React App</h1>
-      <span>
-        Counter: {count}
-      </span>
-      <div>
-        <button onClick={() => setCount(count + 1)}>Add One</button>
+    <div className='mt-32 ml-2'>
+      <h1 className="text-2xl text-gray-800">The Password Generator</h1>
+      <div className='mt-6 margin-auto ml-2'>
+        <input type="text" id='password' className='border-b outline-none w-72 border-black pl-2 h-10' readOnly value={password} ref={passwordRef} placeholder='Generated Password'/>
+        <button className=' px-4 py-2  ml-4' onClick={copyText}>Copy</button>
       </div>
-
-      <div className='flex flex-wrap'>
-        {cardData.map((card, index) => (
-          <Card
-            key={index}
-            title={card.title}
-            image={card.image}
-            description={card.description}
-          />
-        ))}
-      </div>
-
-      <div id="toast-bottom-right" className="fixed flex items-center w-60 max-w-xs p-4 space-x-4 right-5 bottom-5" role="alert">
-        <div className='color-picker' style={{backgroundColor: '#ffff00'}} onClick={() => setColor('#ffff00')}></div>
-        <div className='color-picker' style={{backgroundColor: '#ff6347'}} onClick={() => setColor('#ff6347')}></div>
-        <div className='color-picker' style={{backgroundColor: '#70ffce'}} onClick={() => setColor('#70ffce')}></div>
+      <div className='mt-4 flex ml-2'>
+        <div>
+          <input type="range" className='cursor-pointer' min={6} max={50} value={length} onChange={(e) => setLength(e.target.value)} name="" id="" />
+          <label htmlFor="length" className='ml-2 w-16'>Length: {length}</label>
+        </div>
+        <div>
+          <input type="checkbox" className='cursor-pointer ml-8' name="numbers" id="numbers" checked={isNumberAllowed} onChange={(e) => setIsNumberAllowed(prev => !prev)} />
+          <label htmlFor="numbers" className='ml-2 cursor-pointer'>Include Numbers</label>
+        </div>
       </div>
     </div>
   );
