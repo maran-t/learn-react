@@ -1,13 +1,19 @@
-import './App.css';
 import Login from './components/Login';
-import Profile from './components/Profile';
+import { ThemeProvider } from './context/theme';
 import UserContextProvider from './context/UserContextProvider';
+import ThemeBtn from './components/ToggleBtn';
+import './App.css';
 
 function App() {
   return (
-    <UserContextProvider>
-      <Login />
-    </UserContextProvider>
+    <div className='dark:bg-black'>
+      <ThemeProvider>
+        <UserContextProvider>
+          <ThemeBtn />
+          <Login />
+        </UserContextProvider>
+      </ThemeProvider>
+    </div>
   )
 }
 
