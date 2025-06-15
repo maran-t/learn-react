@@ -40,3 +40,6 @@ button {
   cursor: pointer;
 }
 
+input {
+  width: 220px !important;
+}
